@@ -1,0 +1,568 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Website & Mobile starter project
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/${AppId}-${AWS::Region}-PermissionsBoundary'
+  Api:
+    Cors:
+      AllowMethods: "'OPTIONS,POST,GET,PUT'"
+      AllowHeaders: "'Content-Type'"
+      AllowOrigin: "'*'"
+
+Parameters:
+  AppId:
+    Type: String
+  MongoUrl:
+    Type: String
+    Default: 'local'
+
+Resources:
+  #Device
+  registerDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/registerDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create device.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/register
+            Method: POST
+  postDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/postDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create device.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device
+            Method: POST
+  putDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/putDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Update settings modules.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/update/{id}
+            Method: PUT
+  getDeviceById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/getDeviceById.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get device by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/{id}
+            Method: GET
+  getDeviceByDeviceId:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/getDeviceByDeviceId.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get device by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/deid/{deviceId}
+            Method: GET
+  getDeviceByProject:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/getDevicesByProject.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get all device.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /devices/project/{projectId}
+            Method: GET
+  deleteDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/deleteDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: delete device.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/delete/{id}
+            Method: DELETE
+  preregisterDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/device/preRegisterDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create device.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /device/preregister
+            Method: POST
+  #Picture
+  postPicture:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/postPicture.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create picture.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /picture
+            Method: POST
+  putPicture:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/putPicture.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Update settings modules.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /picture/update/{id}
+            Method: PUT
+  getPictureById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/getPictureById.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get picture by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /picture/{id}
+            Method: GET
+  getPictureByDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/getPicturesByDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get all picture.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /pictures/device/{deviceId}
+            Method: GET
+  deletePicture:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/deletePicture.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: delete picture.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /picture/delete/{id}
+            Method: DELETE
+  createPicture:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/picture/createPicture.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Upload image and Create picture.
+      Policies:
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /picture/upload
+            Method: POST
+  #Project
+  postProject:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/postProject.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create project.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /project
+            Method: POST
+  addDeviceToProject:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/addDevice.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: add Device To Project project.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /project/addDevice
+            Method: POST
+  putProject:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/putProject.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Update settings modules.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /project/update/{id}
+            Method: PUT
+  getProjectById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/getProjectById.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get project by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /project/{id}
+            Method: GET
+  getProjectByOrganization:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/getProjectsByOrganization.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get all project from the organization.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /projects/organization/{organizationId}
+            Method: GET
+  deleteProject:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/project/deleteProject.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: delete project.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /project/delete/{id}
+            Method: DELETE
+  #User
+  postUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/user/postUser.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create user.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: POST
+  putUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/user/putUser.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Update settings modules.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user/update/{id}
+            Method: PUT
+  getUserById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/user/getUserById.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get user by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user/{id}
+            Method: GET
+  deleteUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/user/deleteUser.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: delete user.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /user/delete/{id}
+            Method: DELETE
+  registerUserAndOrganization:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/user/registerUserAndOrganization.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create user and register organization.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /registerUser
+            Method: POST
+  #Organization
+  postOrganization:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/organization/postOrganization.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Create organization.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /organization
+            Method: POST
+  putOrganization:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/organization/putOrganization.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 60
+      Description: Update settings modules.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /organization/update/{id}
+            Method: PUT
+  getAllOrganizationsByUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/organization/getAllOrganizationsByUser.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get organizations by user Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /organization/user/{userId}
+            Method: GET
+  getOrganizationById:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/organization/getOrganizationById.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: get organization by Id.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /organization/{id}
+            Method: GET
+  deleteOrganization:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: src/handlers/organization/deleteOrganization.handler
+      Runtime: nodejs14.x
+      MemorySize: 1024
+      Timeout: 60
+      Description: delete organization.
+      Environment:
+        Variables:
+          MONGO_URL: !Ref MongoUrl
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /organization/delete/{id}
+            Method: DELETE
